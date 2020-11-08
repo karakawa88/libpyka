@@ -1,2 +1,2 @@
-from .AbstractException.py import AbstractException
+from .AbstractException import AbstractException
 
