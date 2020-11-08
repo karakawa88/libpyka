@@ -1,10 +1,15 @@
 import psycopg2
 import configparser
 import sys
+import logging
+import re
 
 ###
 # @brief DB PostgreSQLに関連するユティリティーモジュール。
 #
+
+#ロガー
+logger = logging.getLogger('postgres')
 
 ##
 # @brief DBに接続し、接続オブジェクトを返す。
@@ -23,9 +28,11 @@ def get_connection(host='localhost', port=5432, user=None, password=None, dbname
                         user=user, password=password, dbname=dbname)
     dbcon = None
     try:
+        mess = re.sub('password=(.*?) ', 'password=******', connect_str)
+        logger.info('PostgreSQL接続情報 ' + mess)
         dbcon = psycopg2.connect(connect_str)
     except psycopg2.Error as ex:
-        print('DB接続時にエラー: ', connect_str, file=sys.stderr)
+        logger.error('DB接続時にエラー: ', mess, file=sys.stderr)
         raise ex
     return dbcon
 
@@ -47,6 +54,7 @@ def get_connection(host='localhost', port=5432, user=None, password=None, dbname
 # @return DBコネクションオブジェクト
 # @exception psycopg2.Error   DB接続エラー
 def get_config_connection(inifile, section='PostgreSQL'):
+    logger.debug(f'DB接続iniファイル inifile={inifile}, section={section}')
     config = configparser.ConfigParser()
     config.read(inifile)
     params = {}
