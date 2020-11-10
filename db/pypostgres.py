@@ -3,13 +3,14 @@ import configparser
 import sys
 import logging
 import re
+from db import SQLException
 
 ###
 # @brief DB PostgreSQLに関連するユティリティーモジュール。
 #
 
 #ロガー
-logger = logging.getLogger('postgres')
+logger: logging.Logger = logging.getLogger('postgres')
 
 ##
 # @brief DBに接続し、接続オブジェクトを返す。
@@ -22,7 +23,8 @@ logger = logging.getLogger('postgres')
 # @param dbname     DB名
 # @return DBコネクションオブジェクト
 # @exception psycopg2.Error   DB接続エラー
-def get_connection(host='localhost', port=5432, user=None, password=None, dbname="db1"):
+def get_connection(host: str='localhost', port: int=5432, user: str=None, password: str=None,
+        dbname: str="db1") -> psycopg.connection:
     connect_str = "host={host} port={port} user={user} password={password} dbname={dbname}"
     connect_str = connect_str.format(host=host, port=port, 
                         user=user, password=password, dbname=dbname)
@@ -33,7 +35,7 @@ def get_connection(host='localhost', port=5432, user=None, password=None, dbname
         dbcon = psycopg2.connect(connect_str)
     except psycopg2.Error as ex:
         logger.error('DB接続時にエラー: ', mess, file=sys.stderr)
-        raise ex
+        raise SQLException('DB接続時にエラー 接続文字列: ' + mess, ex)
     return dbcon
 
 
@@ -53,7 +55,7 @@ def get_connection(host='localhost', port=5432, user=None, password=None, dbname
 # @param section セクション名
 # @return DBコネクションオブジェクト
 # @exception psycopg2.Error   DB接続エラー
-def get_config_connection(inifile, section='PostgreSQL'):
+def get_config_connection(inifile: str, section: str='PostgreSQL') -> psycopg.connection:
     logger.debug(f'DB接続iniファイル inifile={inifile}, section={section}')
     config = configparser.ConfigParser()
     config.read(inifile)
@@ -66,8 +68,8 @@ def get_config_connection(inifile, section='PostgreSQL'):
         params['dbname'] = config.get(section, 'dbname')
     params['user'] = config.get(section, 'user')
     params['password'] = config.get(section, 'password')
-    dbcon = getConnection(**params)
+    dbcon = get_connection(**params)
     return dbcon
-    
+
 # *importでimportするクラス・関数
 __all__ = ['get_connection', 'get_config_connection']
