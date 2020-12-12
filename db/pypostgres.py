@@ -4,6 +4,7 @@ import sys
 import logging
 import re
 from db import SQLException
+from psycopg2.extensions import connection
 
 ###
 # @brief DB PostgreSQLに関連するユティリティーモジュール。
@@ -24,7 +25,7 @@ logger: logging.Logger = logging.getLogger('postgres')
 # @return DBコネクションオブジェクト
 # @exception psycopg2.Error   DB接続エラー
 def get_connection(host: str='localhost', port: int=5432, user: str=None, password: str=None,
-        dbname: str="db1") -> psycopg.connection:
+        dbname: str="db1") -> connection:
     connect_str = "host={host} port={port} user={user} password={password} dbname={dbname}"
     connect_str = connect_str.format(host=host, port=port, 
                         user=user, password=password, dbname=dbname)
@@ -55,7 +56,7 @@ def get_connection(host: str='localhost', port: int=5432, user: str=None, passwo
 # @param section セクション名
 # @return DBコネクションオブジェクト
 # @exception psycopg2.Error   DB接続エラー
-def get_config_connection(inifile: str, section: str='PostgreSQL') -> psycopg.connection:
+def get_config_connection(inifile: str, section: str='PostgreSQL') -> connection:
     logger.debug(f'DB接続iniファイル inifile={inifile}, section={section}')
     config = configparser.ConfigParser()
     config.read(inifile)
