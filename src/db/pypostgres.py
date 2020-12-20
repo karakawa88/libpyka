@@ -9,6 +9,9 @@ from psycopg2.extensions import connection
 ###
 # @brief DB PostgreSQLに関連するユティリティーモジュール。
 #
+# python3 -m pypostgres 
+# で引数に何もしないでスクリプトで実行するとDB設定iniファイルの雛形を出力。
+# そのDB設定iniファイルはこのライブラリのconf/postgres.iniファイルである。
 
 #ロガー
 logger: logging.Logger = logging.getLogger('postgres')
@@ -74,3 +77,18 @@ def get_config_connection(inifile: str, section: str='PostgreSQL') -> connection
 
 # *importでimportするクラス・関数
 __all__ = ['get_connection', 'get_config_connection']
+
+import os
+
+# get_config_connection()に渡す設定iniファイルの雛形のファイル名
+conf_file = '../conf/postgres.ini'
+
+def main():
+    if not os.path.exists(conf_file):
+        raise Exception(f"pypostgresパッケージのiniファイルの雛形{conf_file}が存在しません。")
+    with open(conf_file, 'r') as fp:
+        text = fp.read()
+    print(text)
+
+if __name__ == '__main__':
+    main()

@@ -3,8 +3,10 @@
 *.gch
 __pycache__
 mypyreport
-practice_python
-/dmarcreport.ini
 venv
-
+dist
+build
+*.egg-info
+*.whl
+*.tar.gz
 
