@@ -2,11 +2,11 @@
 *.o
 *.gch
 __pycache__
-mypyreport
 venv
 dist
 build
+tmp
 *.egg-info
 *.whl
 *.tar.gz
-
+*.lock

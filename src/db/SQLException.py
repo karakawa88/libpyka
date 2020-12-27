@@ -1,3 +1,7 @@
+"""SQLのエラーを表す例外クラス。
+DB関連全てのエラーを表してもいる。
+"""
+
 from typing import Optional, Union, Any
 from typing import Callable, NoReturn
 from typing import Sequence, Iterable, List, Tuple
@@ -9,14 +13,10 @@ from utils import AbstractException
 # Exceptionのサブクラスを表すGeneric型
 E = NewType('E', BaseException)
 
-##
-# @breif DB関連の全ての例外の基底クラス
-#
-# @version 0.1.1
-# @file     SQLException.py
-# @date     2020-11-10
-# @author           荒川 健太郎
 class SQLException(AbstractException):
+    """DB関連のエラーを表す基底クラス。
+    utils.AbstractExceptionを継承してもいる。
+    """
     ##
     # @brief  コンストラクタ
     #

@@ -1,7 +1,20 @@
+from typing import Optional, Union, Any
+from typing import Callable, NoReturn
+from typing import Sequence, Iterable, List, Tuple
+from typing import Dict
+from typing import TypeVar, Generic, NewType, Type
 from setuptools import setup, find_packages
 
 # plist = find_packages('src')
 # print(plist)
+
+requirements_text: str = 'requirements.txt'
+def get_requirements(fname: str) -> List[str]:
+    with open(fname) as fp:
+        lines = fp.readlines()
+    requires = [line.strip() for line in lines]
+    return requires
+
 
 setup(
     name='libpyka',
