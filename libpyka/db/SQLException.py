@@ -16,6 +16,10 @@ E = NewType('E', BaseException)
 class SQLException(AbstractException):
     """DB関連のエラーを表す基底クラス。
     utils.AbstractExceptionを継承してもいる。
+
+    Args:
+        mess (str): エラーメッセージ
+        nextex (Exception): エラーの元になった例外
     """
     ##
     # @brief  コンストラクタ

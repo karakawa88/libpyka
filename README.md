@@ -1,5 +1,10 @@
 # libpykaライブラリ
 
+##libpykaライセンス
+このソフトウェアはMITライセンスを適用している。
+This software is released under the MIT License, see LICENSE.txt.
+（このソフトウェアは、MITライセンスのもとで公開されている。LICENSE.txtを見よ。）
+
 ## libpykaの概要
 Pythonの一般的ユーティリティライブラリ。
 DBや文字列操作の便利な関数などが利用できる。

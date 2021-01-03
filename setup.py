@@ -4,33 +4,54 @@ from typing import Sequence, Iterable, List, Tuple
 from typing import Dict
 from typing import TypeVar, Generic, NewType, Type
 from setuptools import setup, find_packages
+import os
+import re
 
 # plist = find_packages('src')
 # print(plist)
 
+# 依存しているパッケージのリストファイルrequirements.txt
 requirements_text: str = 'requirements.txt'
 def get_requirements(fname: str) -> List[str]:
+    """このパッケージが依存しているパッケージのリストをrequirements.txtから取得して返す。
+    Args:
+        fname (str): requirements.txt
+    Returns:
+        依存しているパッケージのリスト
+    """
     with open(fname) as fp:
         lines = fp.readlines()
     requires = [line.strip() for line in lines]
     return requires
 
+# バージョン・製作者・Emain・URLなどをライブラリの__init__.pyから取得する
+package_name = 'libpyka'
+root_dir = package_name
+with open(os.path.join(root_dir, '__init__.py'), 'r') as fp:
+    init_text = fp.read()
+    version = re.search(r'__version__\s*=\s*[\'\"](.+?)[\'\"]', init_text).group(1)
+    license = re.search(r'__license__\s*=\s*[\'\"](.+?)[\'\"]', init_text).group(1)
+    author = re.search(r'__author__\s*=\s*[\'\"](.+?)[\'\"]', init_text).group(1)
+    author_email = re.search(r'__author_email__\s*=\s*[\'\"](.+?)[\'\"]', init_text).group(1)
+    url = re.search(r'__url__\s*=\s*[\'\"](.+?)[\'\"]', init_text).group(1)
 
 setup(
-    name='libpyka',
-    version='0.0.2',
+    # パッケージ名
+    name=package_name,
+    # バージョン
+    version=version,
     # パッケージのリスト
     # パッケージのソースがsrcにある場合はfind_packages('src')とする。
-    packages=find_packages('src'),
+    packages=find_packages(root_dir),
     # パッケージがあるディレクトリを指定
     # srcがルートソースディレクトリなら{'', 'src'}とする。
-    package_dir={'': 'src'},
+    package_dir={'': root_dir},
 
     # 作者・プロジェクト情報
-    author='kentarou arakawa',
-    author_email='kagalpan+pypi@kacpp.xyz',
+    author=author,
+    author_email=author_email,
     # プロジェクトのホームページのURL
-    url='http://example.com/',
+    url=url,
 
     # 短い説明文と長い説明文を用意
     # content_typeは下記のいずれか
@@ -56,10 +77,7 @@ setup(
     # 依存するパッケージ
     # 1.x以上のパッケージをインストールする場合 ==1.*
     # 1.3以上で1.xの最新版をインストールする場合 >=1.3 ~=1.3
-    install_requires=[
-        'requests>=2.*',
-        'psycopg2>=2.*'
-    ],
+    install_requires=get_requirements(requirements_text),
 
     # *.py以外のデーターファイルを含める
     # package_data = {'パッケージ名': ['データーファイルのパス']}
