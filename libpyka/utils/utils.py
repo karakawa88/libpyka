@@ -3,6 +3,12 @@
     いまのところ文字列やhashの操作の関数がある。
 
 """
+from typing import Optional, Union, Any
+from typing import Callable, NoReturn
+from typing import Sequence, Iterable, List, Tuple
+from typing import Dict
+from typing import TypeVar, Generic, NewType, Type
+
 
 import hashlib
 from chardet import UniversalDetector
@@ -42,7 +48,7 @@ def hashint(byte_content: bytes, max_range: int=MAX_UNSIGNED_INT) -> int:
     ret = ret * 1234567
     return ret % max_range
 
-def hashint_64(byte_content: bytes) -> int:
+def hashint64(byte_content: bytes) -> int:
     """バイトコンテントから8バイトの整数のハッシュ値を生成して返す。
     
     Args: 
@@ -52,7 +58,7 @@ def hashint_64(byte_content: bytes) -> int:
     """
     return hashint(byte_content, MAX_UNSIGNED_LONG)
 
-def seq_split(seq, size):
+def seq_split(seq: Sequence[Any], size: int) -> Sequence[Any]:
     """シーケンスを引数のsize分の大きさのリストで分割して返す。
     ジェネレーター関数である。
     Args: 
@@ -67,7 +73,7 @@ def seq_split(seq, size):
         maxidx = minidx + size
         yield seq[minidx:maxidx]
 
-def bytes_enc(bytes_content):
+def bytes_enc(bytes_content: bytes) -> str:
     """バイト文字列のエンコード名を返す。
     Args: 
         bytes_content (bytes): バイト文字列
@@ -91,4 +97,4 @@ def bytes_enc(bytes_content):
 
 
 # *importでimportするクラス・関数
-__all__ = ['MAX_UNSIGNED_INT', 'MAX_UNSIGNED_LONG', 'hashint', 'hashint_64', 'bytes_enc']
+__all__ = ['MAX_UNSIGNED_INT', 'MAX_UNSIGNED_LONG', 'hashint', 'hashint64', 'bytes_enc']

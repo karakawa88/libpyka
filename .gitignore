@@ -10,3 +10,5 @@ tmp
 *.whl
 *.tar.gz
 *.lock
+sample.py
+

@@ -1,3 +1,7 @@
 include LICENSE.txt
 include *.md
-
+include requirements.txt
+include test-requirements.txt
+recursive-include conf *
+recursive-include data *
+exclude test.py
