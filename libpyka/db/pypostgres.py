@@ -18,18 +18,14 @@ import configparser
 import sys
 import logging
 import re
-from db import SQLException
+from libpyka.db import SQLException
 from psycopg2.extensions import connection
 
 
 #ロガー
 logger: logging.Logger = logging.getLogger('postgres')
 
-##
-# 
-# DBはPostgreSQLでコネクターはpsycopg2を使用している。
-# @return DBコネクションオブジェクト
-# @exception psycopg2.Error   DB接続エラー
+
 def get_connection(host: str='localhost', port: int=5432, user: str=None, password: str=None,
         dbname: str="db1") -> connection:
     """DBに接続し、接続オブジェクトを返す。
@@ -56,9 +52,10 @@ def get_connection(host: str='localhost', port: int=5432, user: str=None, passwo
         logger.info('PostgreSQL接続情報 ' + mess)
         dbcon = psycopg2.connect(connect_str)
     except psycopg2.Error as ex:
-        logger.error('DB接続時にエラー: ', mess, file=sys.stderr)
-        raise SQLException('DB接続時にエラー 接続文字列: ' + mess, ex)
+        logger.error(f'DB接続時にエラー: {mess}')
+        raise SQLException(f'DB接続時にエラー 接続文字列: {mess}', ex)
     return dbcon
+
 
 ##
 # @return DBコネクションオブジェクト

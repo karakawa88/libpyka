@@ -9,8 +9,12 @@ from typing import TypeVar, Generic, NewType, Type
 
 import unittest
 from pathlib import Path
+import subprocess
+from subprocess import Popen
+import re
 from libpyka.utils import bytes_enc
 from libpyka.utils import hashint, hashint64
+from libpyka.utils import MAX_UNSIGNED_INT, MAX_UNSIGNED_LONG
 
 class BytesEncTest(unittest.TestCase):
     """libpykaライブラリのbytes_enc()関数のテスト
@@ -63,6 +67,9 @@ class HashIntTest(unittest.TestCase):
         Raises:
             FileNotFoundError: ファイルが存在しない
         """
+        if not fname.exists():
+            raise FileNotFoundError(f'ファイル: {str(fname)}は存在しません。')
+        return fname.read_bytes();
 
     def test_hash_int_equal(self):
         """hashint()関数が同じファイルで同じハッシュ関数を生成するかテスト
@@ -76,6 +83,24 @@ class HashIntTest(unittest.TestCase):
         hash2 = hashint(byte_content)
         self.assertEqual(hash1, hash2)
 
+    def hash_to_int(self, hashval: str, max_range: int=MAX_UNSIGNED_INT) -> int:
+        """ハッシュ値の文字列から整数値を組み立てて返す。
+        ハッシュ値は文字列を指定する。
+        ハッシュ値の文字列の一個一個の文字からUnicode Pointを求めて、
+        その合計でハッシュの整数値を求めている。
+        Args:
+            hashval (str): ハッシュ値
+            max_range (int): 整数値の範囲
+        Returns:
+            int: 文字列のハッシュ値から生成した整数値
+        """
+        ret = 1
+        for ch in hashval:
+            val = ord(ch)
+            ret = ret + val
+        ret = ret * 1234567
+        return ret % max_range
+
     def test_hash_int_sha256sum_equal(self):
         """libpykaライブラリのhashint()関数の生成するハッシュと
         シェルのsha256sum関数が生成するハッシュで同じ
@@ -83,4 +108,16 @@ class HashIntTest(unittest.TestCase):
         """
         fname = 'data/logo.png'
         path = Path('tests') / fname
+        cmd = f'sha256sum {path}'
+        proc = Popen(cmd, shell=True, stdout=subprocess.PIPE)
+        result = proc.stdout.read().decode('utf-8')
+        shhash = re.sub(r'[ \t]+.*$', '', result, flags=re.DOTALL)
+        hash1 = self.hash_to_int(shhash)
+        proc.wait()
+        proc.stdout.close()
+        byte_content = self.read_bytes(path)
+        hash2 = hashint(byte_content)
+        self.assertEqual(hash1, hash2)
+
+        
         

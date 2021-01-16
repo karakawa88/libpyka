@@ -8,7 +8,7 @@ from typing import Sequence, Iterable, List, Tuple
 from typing import Dict
 from typing import TypeVar, Generic, NewType, Type
 
-from utils import AbstractException
+from ..utils import AbstractException
 
 # Exceptionのサブクラスを表すGeneric型
 E = NewType('E', BaseException)
