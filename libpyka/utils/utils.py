@@ -95,6 +95,23 @@ def bytes_enc(bytes_content: bytes) -> str:
     encdic = detector.result
     return encdic['encoding']
 
+def dict_conv_str(dic: Dict[str, Any], connect_str: str='=', delim: str='&') -> str:
+    """辞書を指定したキーと値をつなげる文字と区切り文字に変換した文字列を返す。
+    Args:
+        dic (Dict[str, Any]): 辞書
+        connect_str (str): キーと値をつなげる文字列
+        delim (str): 区切り文字
+    Returns:
+        変換後の文字列
+    Raises:
+        ValueError: 引数の辞書にNoneが渡された
+    """
+    if dic is None:
+        raise ValueError('dict_conv_str()にNoneが渡されました。辞書オブジェクトが必要です。')
+    list_entry = [f'{str(key)}{connect_str}{str(val)}' for key, val in dic.items()]
+    ret = delim.join(list_entry)
+    return ret
 
 # *importでimportするクラス・関数
-__all__ = ['MAX_UNSIGNED_INT', 'MAX_UNSIGNED_LONG', 'hashint', 'hashint64', 'bytes_enc']
+__all__ = ['MAX_UNSIGNED_INT', 'MAX_UNSIGNED_LONG', 'hashint', 'hashint64', 'bytes_enc',
+        'dict_conv_str']

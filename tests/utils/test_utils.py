@@ -12,7 +12,7 @@ from pathlib import Path
 import subprocess
 from subprocess import Popen
 import re
-from libpyka.utils import bytes_enc
+from libpyka.utils import bytes_enc, dict_conv_str
 from libpyka.utils import hashint, hashint64
 from libpyka.utils import MAX_UNSIGNED_INT, MAX_UNSIGNED_LONG
 
@@ -120,4 +120,44 @@ class HashIntTest(unittest.TestCase):
         self.assertEqual(hash1, hash2)
 
         
+class DicConvStrTest(unittest.TestCase):
+    def test_dict_conv_str_params(self) -> None:
+        """入力パラメーターを複数変えテストする
+        """
+        params = [
+                { 
+                    'param': {
+                        'dic': {'name': 'kamail', 'value': 'テスト'},
+                    },
+                    'result': 'name=kamail&value=テスト'
+                },
+                { 
+                    'param': {
+                        'dic': {'name': 'kamail', 'value': 'テスト', 'python': 'dict'},
+                        'connect_str': '#',
+                        'delim': ','
+                    },
+                    'result': 'name#kamail,value#テスト,python#dict'
+                },
+                { 
+                    'param': {
+                        'dic': {},
+                        'connect_str': '#',
+                        'delim': ','
+                    },
+                    'result': ''
+                },
+        ]
+        for entry in params:
+            param = entry['param']
+            test_result = entry['result']
+            with self.subTest(**param):
+                result = dict_conv_str(**param)
+                self.assertEqual(result, test_result)
         
+    def test_dict_conv_str_ex(self):
+        """辞書がNoneの場合ValueErrorが送出されるかテストする。
+        """
+        with self.assertRaises(ValueError):
+            dict_conv_str(None)
+
