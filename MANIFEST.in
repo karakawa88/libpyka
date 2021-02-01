@@ -4,4 +4,5 @@ include requirements.txt
 include test-requirements.txt
 recursive-include conf *
 recursive-include data *
-exclude test.py
+recursive-include tests *
+exclude sample.py
