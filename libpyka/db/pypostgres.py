@@ -26,8 +26,8 @@ from psycopg2.extensions import connection
 logger: logging.Logger = logging.getLogger('postgres')
 
 
-def get_connection(host: str='localhost', port: int=5432, user: str=None, password: str=None,
-        dbname: str="db1") -> connection:
+def get_connection(host: str='localhost', port: int=5432, user: Optional[str]=None, 
+        password: Optional[str]=None, dbname: str="db1") -> connection:
     """DBに接続し、接続オブジェクトを返す。
     DBはPostgreSQLでコネクターはpsycopg2を使用している。
     返値はpsycopg2のconnectionオブジェクトである。
@@ -87,12 +87,13 @@ def get_config_connection(inifile: str, section: str='PostgreSQL') -> connection
     if config.has_option(section, 'host'):
         params['host'] = config.get(section, 'host')
     if config.has_option(section, 'port'):
-        params['port'] = config.get(section, 'port')
+        params['port'] = int(config.get(section, 'port'))  # type: ignore
     if config.has_option(section, 'dbname'):
         params['dbname'] = config.get(section, 'dbname')
     params['user'] = config.get(section, 'user')
     params['password'] = config.get(section, 'password')
-    dbcon = get_connection(**params)
+    # キーワード可変引数の型チェック機能はないため無視する
+    dbcon = get_connection(**params)     # type: ignore
     return dbcon
 
 # *importでimportするクラス・関数
@@ -103,7 +104,7 @@ import os
 # get_config_connection()に渡す設定iniファイルの雛形のファイル名
 conf_file = '../conf/postgres.ini'
 
-def main():
+def main() -> None:
     if not os.path.exists(conf_file):
         raise Exception(f"pypostgresパッケージのiniファイルの雛形{conf_file}が存在しません。")
     with open(conf_file, 'r') as fp:

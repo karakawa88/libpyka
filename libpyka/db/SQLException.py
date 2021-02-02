@@ -11,7 +11,7 @@ from typing import TypeVar, Generic, NewType, Type
 from ..utils import AbstractException
 
 # Exceptionのサブクラスを表すGeneric型
-E = NewType('E', BaseException)
+E = TypeVar('E', bound=BaseException)
 
 class SQLException(AbstractException):
     """DB関連のエラーを表す基底クラス。
@@ -27,8 +27,8 @@ class SQLException(AbstractException):
     # @param mess エラーメッセージ
     # @param nextex 例外の元になった例外
     def __init__(self, mess: str, nextex: Optional[E]=None) -> None:
-        self.message = mess
-        self.nextex = nextex
+        self.message: str = mess
+        self.nextex: Optional[E] = nextex
 
 # *importでimportするクラス・関数
 __all__ = ['SQLException']

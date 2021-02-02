@@ -58,7 +58,7 @@ def hashint64(byte_content: bytes) -> int:
     """
     return hashint(byte_content, MAX_UNSIGNED_LONG)
 
-def seq_split(seq: Sequence[Any], size: int) -> Sequence[Any]:
+def seq_split(seq: Sequence[Any], size: int) -> Iterable[Any]:
     """シーケンスを引数のsize分の大きさのリストで分割して返す。
     ジェネレーター関数である。
     Args: 
@@ -73,7 +73,7 @@ def seq_split(seq: Sequence[Any], size: int) -> Sequence[Any]:
         maxidx = minidx + size
         yield seq[minidx:maxidx]
 
-def bytes_enc(bytes_content: bytes) -> str:
+def bytes_enc(bytes_content: bytes) -> Optional[str]:
     """バイト文字列のエンコード名を返す。
     Args: 
         bytes_content (bytes): バイト文字列

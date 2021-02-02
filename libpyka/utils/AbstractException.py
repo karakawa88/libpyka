@@ -9,7 +9,7 @@ from typing import Dict
 from typing import TypeVar, Generic, NewType
 
 # 元の例外となる型 BaseExceptionを継承
-E = NewType('E', BaseException)
+E = TypeVar('E', bound=BaseException)
 
 class AbstractException(Exception):
     """例外の元になる基底クラス
@@ -52,7 +52,7 @@ class AbstractException(Exception):
         """
         return self.__message
     @message.setter
-    def message(self, message):
+    def message(self, message: str) -> None:
         """例外メッセージをセットする
         Args:
             message (str): エラーメッセージ
