@@ -42,7 +42,7 @@ workflows:
         - test:
             requires:
                 - setup_dependencies
-        - thint
+        - thint:
             requires:
                 - test
 
