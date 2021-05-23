@@ -18,7 +18,7 @@ import configparser
 import sys
 import logging
 import re
-from libpyka.db import SQLException
+from db import SQLException
 from psycopg2.extensions import connection
 
 

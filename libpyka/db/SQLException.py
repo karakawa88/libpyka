@@ -27,8 +27,7 @@ class SQLException(AbstractException):
     # @param mess エラーメッセージ
     # @param nextex 例外の元になった例外
     def __init__(self, mess: str, nextex: Optional[E]=None) -> None:
-        self.message: str = mess
-        self.nextex: Optional[E] = nextex
+        super().__init__(mess, nextex)
 
 # *importでimportするクラス・関数
 __all__ = ['SQLException']
