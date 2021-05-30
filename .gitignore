@@ -11,4 +11,6 @@ tmp
 *.tar.gz
 *.lock
 sample.py
+.mypy_cache
+gitpush.sh
 
