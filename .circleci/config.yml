@@ -9,9 +9,9 @@ jobs:
                 key: deps-{{ checksum "requirements.txt" }}
             - run:
                 command: |
-                    pip3 install --user -r requirements.txt
+                    pip install --user -r requirements.txt
                     python3 -m pip install -U git+git://github.com/python/mypy.git
-                    pip3 install . -e
+                    pip install . -e
             - save_cache:
                 key: deps-{{ checksum "requirements.txt" }}
                 paths:
