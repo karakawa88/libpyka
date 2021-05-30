@@ -2,7 +2,7 @@ version: 2
 jobs:
     setup_dependencies:
         docker:
-            - image: circleci/python:3.8.5
+            - image: kagalpandh/kacpp-cppdev
         steps:
             - checkout
             - restore_cache:
@@ -10,13 +10,15 @@ jobs:
             - run:
                 command: |
                     pip install --user -r requirements.txt
+                    python3 -m pip install -U git+git://github.com/python/mypy.git
+                    pip install . -e
             - save_cache:
                 key: deps-{{ checksum "requirements.txt" }}
                 paths:
                     - "~/.local"
     test:
         docker:
-            - image: circleci/python:3.8.5
+            - image: kagalpandh/kacpp-cppdev
         steps:
             - checkout
             - restore_cache:
@@ -26,7 +28,7 @@ jobs:
                     python3 -m unittest discover tests -v
     thint:
         docker:
-            - image: circleci/python:3.8.5
+            - image: kagalpandh/kacpp-cppdev
         steps:
             - checkout
             - restore_cache:
