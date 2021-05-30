@@ -35,7 +35,7 @@ jobs:
                 key: deps-{{ checksum "requirements.txt" }}
             - run:
                 command: |
-                    mypy --config-file=mypy.ini libpyka
+                    python3 -m mypy --config-file=mypy.ini libpyka
 workflows:
   version: 2
   all:
