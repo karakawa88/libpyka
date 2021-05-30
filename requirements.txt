@@ -1,7 +1,5 @@
-beautifulsoup4>=4.*
+beautifulsoup4>=4.9.*
+chardet>=4.*
 cssselect>=1.*
-lxml>=4.*
-psycopg2>=2.*
+psycopg2>=2.8.6
 requests>=2.*
-mypy>=0.8.*
-
