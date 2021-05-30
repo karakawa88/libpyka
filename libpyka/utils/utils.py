@@ -95,7 +95,7 @@ def bytes_enc(bytes_content: bytes) -> Optional[str]:
     encdic = detector.result
     return encdic['encoding']
 
-def dict_conv_str(dic: Dict[str, Any], connect_str: str='=', delim: str='&') -> str:
+def dict_conv_str(dic: Optional[Dict[str, Any]], connect_str: str='=', delim: str='&') -> str:
     """辞書を指定したキーと値をつなげる文字と区切り文字に変換した文字列を返す。
     Args:
         dic (Dict[str, Any]): 辞書

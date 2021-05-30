@@ -51,7 +51,7 @@ def get_connection(host: str='localhost', port: int=5432, user: Optional[str]=No
         mess = re.sub('password=(.*?) ', 'password=******', connect_str)
         logger.info('PostgreSQL接続情報 ' + mess)
         dbcon = psycopg2.connect(connect_str)
-    except psycopg2.Error as ex:
+    except Exception as ex:
         logger.error(f'DB接続時にエラー: {mess}')
         raise SQLException(f'DB接続時にエラー 接続文字列: {mess}', ex)
     return dbcon
