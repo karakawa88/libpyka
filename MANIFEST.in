@@ -6,3 +6,6 @@ recursive-include conf *
 recursive-include data *
 recursive-include tests *
 exclude sample.py
+exclude gitpush.sh
+exclude pypi-upload.sh
+

@@ -56,4 +56,65 @@ class PyPostgresTest(unittest.TestCase):
         dbcon = pypostgres.get_config_connection(inifile, section) # type: ignore
         self.assertTrue(dbcon is not None)
 
+    def test_db_object_names(self) -> None:
+        """db_object_names()関数のテスト
+        DBオブジェクトの名前がきちんと取得できるか確認する。
+        """
+        def in_array(array: Sequence[str], search: Sequence[str]) -> bool:
+            """配列arrayの中に配列searchの要素が全て含まれているか
+            Args:
+                array (Sequence[str]): 検索対象の配列
+                search (Sequence[str]): 検索する要素の配列
+            Returns:
+                True: すべて含まれている
+                False: 何か一つ含まれていない要素があった
+            """
+            for table in search:
+                if table not in array:
+                    return False
+            return True
+
+        inifile = 'tests/data/postgres.ini'
+        section = 'PostgreSQL'
+        expected = ["test_db_objects", "test_sample"]
+        dbcon = None
+        cur = None
+        try:
+            dbcon = pypostgres.get_config_connection(inifile, section) # type: ignore
+            cur = dbcon.cursor()
+            sql = "create table test_db_objects (id integer not null, name text)"
+            cur.execute(sql)
+            sql = "create table test_sample (id integer not null)"
+            cur.execute(sql)
+            result = pypostgres.db_object_names("TABLE", cur)
+#             print(result)
+            dbcon.commit()
+            if cur is not None:
+                cur.close()
+            if dbcon is not None:
+                dbcon.close()
+            self.assertTrue(in_array(result, expected))
+        except Exception as ex:
+            print(ex)
+
+    def tearDown(self) -> None:
+        """このクラスのテストケースの後処理
+        """
+        inifile = 'tests/data/postgres.ini'
+        section = 'PostgreSQL'
+        dbcon = None
+        cur = None
+        try:
+            dbcon = pypostgres.get_config_connection(inifile, section) # type: ignore
+            cur = dbcon.cursor()
+            cur.execute("drop table if exists test_db_objects")
+            cur.execute("drop table if exists test_sample")
+            dbcon.commit()
+        except Exception as ex:
+            print(ex)
+        finally:
+            if cur is not None:
+                cur.close()
+            if dbcon is not None:
+                dbcon.close()
 

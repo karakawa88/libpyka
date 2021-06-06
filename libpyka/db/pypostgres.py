@@ -96,8 +96,42 @@ def get_config_connection(inifile: str, section: str='PostgreSQL') -> connection
     dbcon = get_connection(**params)     # type: ignore
     return dbcon
 
+TEST_SYSTEM_CATALOG = [
+        { 
+            "type": "TABLE",
+            "sql": "select tablename from pg_tables"
+        },
+        { 
+            "type": "INDEX",
+            "sql": "select indexname from pg_indexes"
+        }
+]
+
+def db_object_names(type_name: str, cur: Any) -> list[str]:
+    """DBオブジェクトの名前のリストを取得して返す。
+    DBオブシェクトの種類はTABLEがテーブルでINDEXがインデックスなどある。
+    Args:
+        type_name (str): オブジェクトのタイプ
+        cur (CUR):      カーソルオブジェクト
+    Returns:
+        list[str]: DBオブジェクトの名前のリスト
+    """
+    # DBのオブジェクトの名前でシステムカタログのSQLを取得する
+    def find_system_catalog_sql(type_name: str) -> Optional[str]:
+        for v in TEST_SYSTEM_CATALOG:
+            if v["type"] == type_name:
+                return v["sql"]
+        return None
+
+    sql = None
+    sql = find_system_catalog_sql(type_name)
+#     print("system catalog sql: " + sql)
+    cur.execute(sql)
+    result = cur.fetchall()
+    return [row[0] for row in result]
+
 # *importでimportするクラス・関数
-__all__ = ['get_connection', 'get_config_connection']
+__all__ = ['get_connection', 'get_config_connection', 'db_object_names']
 
 import os
 
