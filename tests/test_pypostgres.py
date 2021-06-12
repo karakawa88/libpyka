@@ -86,34 +86,16 @@ class PyPostgresTest(unittest.TestCase):
             cur.execute(sql)
             sql = "create table test_sample (id integer not null)"
             cur.execute(sql)
-            result = pypostgres.db_object_names("TABLE", cur)
-#             print(result)
+            result = pypostgres.db_object.names("TABLE", cur)
+            print(result)
             dbcon.commit()
-            if cur is not None:
-                cur.close()
-            if dbcon is not None:
-                dbcon.close()
             self.assertTrue(in_array(result, expected))
-        except Exception as ex:
-            print(ex)
-
-    def tearDown(self) -> None:
-        """このクラスのテストケースの後処理
-        """
-        inifile = 'tests/data/postgres.ini'
-        section = 'PostgreSQL'
-        dbcon = None
-        cur = None
-        try:
-            dbcon = pypostgres.get_config_connection(inifile, section) # type: ignore
-            cur = dbcon.cursor()
-            cur.execute("drop table if exists test_db_objects")
-            cur.execute("drop table if exists test_sample")
-            dbcon.commit()
         except Exception as ex:
             print(ex)
         finally:
             if cur is not None:
+                cur.execute("drop table if exists test_db_objects")
+                cur.execute("drop table if exists test_sample")
                 cur.close()
             if dbcon is not None:
                 dbcon.close()

@@ -123,6 +123,7 @@ def db_object_names(type_name: str, cur: Any) -> list[str]:
                 return v["sql"]
         return None
 
+    type_name = type_name.upper()
     sql = None
     sql = find_system_catalog_sql(type_name)
 #     print("system catalog sql: " + sql)
