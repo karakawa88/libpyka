@@ -1,6 +1,6 @@
 # libpykaライブラリ
 __copyright__    = 'Copyright (C) 2020 Kentarou Arakawa'
-__version__      = '0.1.14'
+__version__      = '0.1.16'
 __license__      = 'MIT'
 __author__       = 'Kentarou Arakawa'
 __author_email__ = 'kagalpan@kacpp.xyz'
